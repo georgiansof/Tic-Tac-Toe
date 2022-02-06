@@ -166,21 +166,30 @@ func Score(state):
 
 func CalcMove(state):
 	var vmax=-2e9
-	var vmaxstate=""
+	var vmaxstate=[]
 	for i in range (state.length()):
 		if state[i]=="N": 
 			state[i]="O"
 			var score1 = Score(state)
 			if(score1>vmax):
 				vmax=score1
-				vmaxstate=state
+				vmaxstate.clear()
+				vmaxstate.append(state)
+			elif score1==vmax:
+				vmaxstate.append(state)
 			state[i]="X"
 			var score2 = Score(state)
 			if(score2>vmax):
 				vmax=score2
-				vmaxstate=state
+				vmaxstate.clear()
+				vmaxstate.append(state)
+			elif score2==vmax:
+				vmaxstate.append(state)
 			state[i]="N"
-	return vmaxstate
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var ind = rng.randi()%(vmaxstate.size())
+	return vmaxstate[ind]
 
 
 func CalcInd(state,nextstate) -> int:
