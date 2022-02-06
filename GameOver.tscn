@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://play_again.gd" type="Script" id=2]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -1.0
+margin_bottom = -1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 513, 301.5 )
+scale = Vector2( 2.00391, 1.17773 )
+
+[node name="WinnerLabel" type="Label" parent="Sprite"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -70.8624
+margin_top = -199.112
+margin_right = 63.1376
+margin_bottom = -152.112
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Sprite"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -84.8351
+margin_top = 166.695
+margin_right = 152.165
+margin_bottom = 259.695
+rect_scale = Vector2( 0.660663, 0.660663 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Sprite/Button"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -67.0
+margin_top = -23.5
+margin_right = 67.0
+margin_bottom = 23.5
+text = "Play Again"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Sprite/Button" to="Sprite/Button" method="_on_Button_pressed"]
