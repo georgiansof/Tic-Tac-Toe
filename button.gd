@@ -14,7 +14,7 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func _on_Button_pressed():
+func _on_Button_pressed():	
 	if Globals.paused==false:
 		if self.text!='X' && self.text!='0':
 			self.text = "X" if Globals.player==true else "0"

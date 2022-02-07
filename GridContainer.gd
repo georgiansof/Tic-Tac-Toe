@@ -72,16 +72,26 @@ func verify_terminal_state() -> bool:
 	|| verify_full()
 	pass
 
+func Reversed(state):
+	for x in range(state.length()):
+		if state[x]=='X': state[x]='O'
+		elif state[x]=='O': state[x]='X'
+	return state
+
 func GameOver(winner):
 	Globals.paused = true
 	var UI = self.owner.get_child(2)
 	UI.get_child(0).get_child(0).text = winner + " wins !"
+	var current_state = Current_state()
+	var rev_current_state = Reversed (current_state)
 	if winner=="0":
 		Globals.O_score += 1
-		Globals.terminal_states[State_Index(Current_state())]-=1
+		Globals.terminal_states[State_Index(current_state)]-=1
+		Globals.terminal_states[State_Index(rev_current_state)]+=1
 	elif winner=="X":
 		Globals.X_score += 1
-		Globals.terminal_states[State_Index(Current_state())]+=1
+		Globals.terminal_states[State_Index(current_state)]+=1
+		Globals.terminal_states[State_Index(rev_current_state)]-=1
 	self.get_parent().get_child(3).text = "0's score is " + str(Globals.O_score)
 	self.get_parent().get_child(4).text = "X's score is " + str(Globals.X_score)
 	UI.visible = true
@@ -91,8 +101,8 @@ func GameOver(winner):
 func GameRestart():
 	Globals.moves_number = 0
 	Globals.paused=false
-	Globals.Winner="None"
 	Globals.player=false
+	Globals.Winner="None"
 	for i in range(3):
 		for j in range(3):
 			button_grid[i][j].text=""
@@ -178,6 +188,8 @@ func CalcMove(state):
 			elif score1==vmax:
 				vmaxstate.append(state)
 			state[i]="X"
+			if terminal_string(state):
+				return state
 			var score2 = Score(state)
 			if(score2>vmax):
 				vmax=score2
@@ -188,7 +200,7 @@ func CalcMove(state):
 			state[i]="N"
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
-	var ind = rng.randi()%(vmaxstate.size())
+	var ind = rng.randi_range(0,vmaxstate.size()-1)
 	return vmaxstate[ind]
 
 
@@ -206,11 +218,11 @@ func Bot_Move(): # FIXME
 			if button_grid[i][j].text=="":
 				empty_buttons.append(button_grid[i][j])
 	if empty_buttons.size()>0:
-		if Globals.difficulty=="Random": #|| (Globals.difficulty=="ML" && Globals.moves_number<2):
+		if Globals.difficulty=="Random":
 			var ind = int(rand_range(0,empty_buttons.size()-1))
 			empty_buttons[ind]._on_Button_pressed()
 		elif Globals.difficulty=="ML":
-			if Globals.moves_number>2:
+			if Globals.moves_number>=2:
 				var state = Current_state()
 				var nextstate = CalcMove(state)
 				if(nextstate!=""):
@@ -220,19 +232,30 @@ func Bot_Move(): # FIXME
 					var ind = int(rand_range(0,empty_buttons.size()-1))
 					empty_buttons[ind]._on_Button_pressed()
 			else:
-				if button_grid[1][1].text=="":
-					button_grid[1][1]._on_Button_pressed()
-				else:
+				if Globals.moves_number==0 || button_grid[1][1].text!="":
 					var rng = RandomNumberGenerator.new()
+					var ind
+					var jnd
 					rng.randomize()
-					var ind = rng.randi()%2
+					ind = rng.randi_range(0,1)
 					rng.randomize()
-					var jnd = rng.randi()%2
+					jnd = rng.randi_range(0,1)
 					if ind==1:
 						ind=2
 					if jnd==1:
 						jnd=2
+					while button_grid[ind][jnd].text!="":
+						rng.randomize()
+						ind = rng.randi_range(0,1)
+						rng.randomize()
+						jnd = rng.randi_range(0,1)
+						if ind==1:
+							ind=2
+						if jnd==1:
+							jnd=2
 					button_grid[ind][jnd]._on_Button_pressed()
+				else:
+					button_grid[1][1]._on_Button_pressed()
 	pass
 
 func reset_score():

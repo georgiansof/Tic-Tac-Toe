@@ -18,7 +18,7 @@ var file = File.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	for i in range(19685):
+	for _i in range(19685):
 			terminal_states.append(0)
 	var content
 	if(file.file_exists("res://save_game.dat")):
