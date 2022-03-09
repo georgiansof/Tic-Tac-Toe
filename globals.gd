@@ -21,8 +21,8 @@ func _ready():
 	for _i in range(19685):
 			terminal_states.append(0)
 	var content
-	if(file.file_exists("res://save_game.dat")):
-		file.open("res://save_game.dat", File.READ)
+	if(file.file_exists("user://save_game.dat")):
+		file.open("user://save_game.dat", File.READ)
 		content=file.get_as_text()
 		if(content==""):
 			resetAI_DB()
@@ -39,7 +39,7 @@ func save():
 	var savegame:=""
 	for i in range(19685):
 		savegame+=(str(terminal_states[i])+" ")
-	file.open("res://save_game.dat", File.WRITE)
+	file.open("user://save_game.dat", File.WRITE)
 	file.store_string(savegame)
 	file.close()
 	pass
@@ -50,7 +50,7 @@ func resetAI_DB():
 	for i in range(19685):
 		empty+="0 "
 		terminal_states[i]=0
-	file2.open("res://save_game.dat", File.WRITE)
+	file2.open("user://save_game.dat", File.WRITE)
 	file2.store_string(empty)
 	file2.close()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
